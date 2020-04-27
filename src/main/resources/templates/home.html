@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="../css/layui.css">
+    <script src="../myJs/jquery-3.3.1.min.js"></script>
+    <script src="../myJs/AjaxUtils.js"></script>
+
+    <style>
+        .layui-tree-txt {
+            color: #000;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+    <div class="layui-header" id="header">
+        <div class="layui-logo">后台管理系统</div>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                    大锤
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">基本资料</a></dd>
+                    <dd><a href="">安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/loginAjax/logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div id="div1" class="layui-side layui-bg-white "></div>
+    <div id="div2" class="layui-side layui-bg-white "></div>
+
+    <div class="layui-body">  <!--主要内容-->
+        <iframe id="iframeMain" src="" style="width: 100%; height: 100% ;border: none;"></iframe>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script src="../layui.js"></script>
+
+
+<script>
+    layui.use('element', function () {      //使用layUi
+        var element = layui.element;
+    });
+    var data1 = "";
+    var data2 = "";
+    jQuery(document).ready(function () {
+        $('#div2').attr("style", "display:none;");   //隐藏DIV2
+        var para = {};
+        sendAjax("/sysFuncAjax/getFuncList", para, function (data) {
+            if (data.state === 0) {
+                var json = data.object;
+                if (json.length > 0) {
+                    var ul = "<ul class=\"layui-nav layui-layout-left\">";
+                    for (var i = 0; i < json.length; i++) {
+                        if (i === 0) {
+                            ul += "<li class=\"layui-nav-item\"><a onclick=\"divOne()\">" + json[i].title + "</a></li>";
+                            data1 = json[i].children;
+                            layui.use('tree', function () {
+                                var tree = layui.tree;
+                                //渲染
+                                tree.render({
+                                    elem: '#div1',  //绑定元素
+                                    data: data1
+                                    , accordion: true //是否开启手风琴模式
+                                    , id: 'demoId1'
+                                    //,showCheckbox: true //是否显示复选框
+                                    , isJump: true //是否允许点击节点时弹出新窗口跳转
+                                    , showLine: true //是否开启连接线
+                                    //,edit: ['add', 'update', 'del'] //开启操作节点的图标
+                                });
+                                $(".layui-tree-txt").click(function (e) {
+                                    e.preventDefault();
+                                    $("#iframeMain").attr("src", $(this).attr("href"));
+                                });
+                            });
+                        } else {
+                            ul += "<li class=\"layui-nav-item\"><a onclick=\"divTwo()\">" + json[i].title + "</a></li>";
+                            data2 = json[i].children;
+                            layui.use('tree', function () {
+                                var tree = layui.tree;
+                                //渲染
+                                tree.render({
+                                    elem: '#div2',  //绑定元素
+                                    data: data2
+                                    , id: 'demoId2'
+                                    , accordion: true //是否开启手风琴模式
+                                    //,showCheckbox: true //是否显示复选框
+                                    , isJump: true //是否允许点击节点时弹出新窗口跳转
+                                    , showLine: true //是否开启连接线
+                                    //,edit: ['add', 'update', 'del'] //开启操作节点的图标
+                                });
+                                $(".layui-tree-txt").click(function (e) {
+                                    e.preventDefault();
+                                    $("#iframeMain").attr("src", $(this).attr("href"));
+                                });
+                            });
+
+                        }
+                    }
+                    ul += "</ul>";
+                    $('#header').append(ul);
+                }
+            } else {
+                layer.alert(data.message);
+            }
+        })
+    });
+
+
+    function divOne() {
+        $('#div2').attr("style", "display:none;");
+        $('#div1').attr("style", "display:block;");
+    }
+
+    function divTwo() {
+        $('#div2').attr("style", "display:block;");
+        $('#div1').attr("style", "display:none;");
+    }
+
+
+
+
+</script>
+
+</body>
+</html>

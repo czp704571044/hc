@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    #type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://39.108.236.20:3306/LAYUI?zeroDateTimeBehavior=convertToNull
+    username: layui
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: LEGACYHTML5
+    cache: false
+
+#logBack日志配置
+logging:
+  level:
+    cn.: debug
+
+mybatis:
+  mapper-locations: classpath:/yfyue/*/mapper/**.xml
+  type-aliases-package: cn.yfyue.*.domain

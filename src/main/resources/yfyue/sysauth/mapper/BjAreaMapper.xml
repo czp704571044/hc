@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yfyue.sysauth.mapper.BjAreaMapper">
+    <resultMap id="BaseResultMap" type="cn.yfyue.sysauth.model.BjArea">
+        <id column="AREA_CODE" property="areaCode" jdbcType="VARCHAR"/>
+        <result column="AREA_LEVEL" property="areaLevel" jdbcType="INTEGER"/>
+        <result column="SUPPER_CODE" property="supperCode" jdbcType="VARCHAR"/>
+        <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR"/>
+        <result column="FULL_NAME" property="fullName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--
+    //取地区列表
+    List<BjArea> getAreaList(@Param("areaCode")String areaCode);
+    -->
+    <select id="getAreaList" resultMap="BaseResultMap">
+        SELECT AREA_CODE,AREA_LEVEL,SUPPER_CODE,AREA_NAME,FULL_NAME
+        FROM BJ_AREA WHERE 1=1
+        <if test="areaCode !=null">
+            <!-- AND  AREA_CODE LIKE '${areaCode}%' -->
+            AND SUPPER_CODE=#{areaCode,jdbcType=VARCHAR}
+        </if>
+        ORDER BY AREA_CODE ASC
+    </select>
+    <!--
+    //添加
+   int addArea(BjArea bjArea);
+   -->
+    <insert id="addArea" parameterType="cn.yfyue.sysauth.model.BjArea">
+        insert into BJ_AREA (AREA_CODE, AREA_LEVEL, SUPPER_CODE,
+        AREA_NAME, FULL_NAME)
+        values (#{areaCode,jdbcType=VARCHAR}, #{areaLevel,jdbcType=INTEGER}, #{supperCode,jdbcType=VARCHAR},
+        #{areaName,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR})
+    </insert>
+
+    <!--
+    //取单个类型
+    BjArea getAreaInfo(String areaCode);
+    -->
+    <select id="getAreaInfo" resultMap="BaseResultMap">
+        SELECT AREA_CODE,AREA_LEVEL,SUPPER_CODE,AREA_NAME,FULL_NAME
+        FROM BJ_AREA WHERE AREA_CODE=#{areaCode,jdbcType=VARCHAR}
+    </select>
+    <!--
+    //更新
+    int upArea(BjArea bjArea);
+    -->
+    <update id="upArea" parameterType="cn.yfyue.sysauth.model.BjArea">
+        update BJ_AREA
+        <set>
+            <if test="areaName != null">
+                AREA_NAME = #{areaName,jdbcType=VARCHAR},
+            </if>
+            <if test="fullName != null">
+                FULL_NAME = #{fullName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where AREA_CODE = #{areaCode,jdbcType=VARCHAR}
+    </update>
+    <!--
+    //删除
+    int delArea(String areaCode);
+    -->
+    <delete id="delArea">
+        DELETE FROM BJ_AREA WHERE AREA_CODE=#{areaCode,jdbcType=VARCHAR}
+    </delete>
+    <!--
+    //验证是否有下级数据
+    int getAreaIsChild(String areaCode);
+    -->
+    <select id="getAreaIsChild" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM BJ_AREA WHERE SUPPER_CODE=#{areaCode,jdbcType=VARCHAR}
+    </select>
+    <!--
+    //验证编码是否存在
+    int isAreaCode(String areaCode);
+    -->
+    <select id="isAreaCode" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM BJ_AREA WHERE AREA_CODE=#{areaCode,jdbcType=VARCHAR}
+    </select>
+    <!--
+    //取省目录列表
+    List<BjArea> getFirstAreaList();
+    -->
+    <select id="getFirstAreaList" resultMap="BaseResultMap">
+        SELECT AREA_CODE, AREA_LEVEL, SUPPER_CODE, AREA_NAME, FULL_NAME
+        FROM BJ_AREA
+        WHERE AREA_LEVEL = 1
+        ORDER BY AREA_CODE ASC
+    </select>
+</mapper>

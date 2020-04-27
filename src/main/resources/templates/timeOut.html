@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Log in</title>
+    <script src="../myJs/jquery-3.3.1.min.js"></script>
+    <script src="../myJs/AjaxUtils.js"></script>
+    <script type="text/javascript">
+
+        function signIn() {
+            window.location.href = "/index/login";
+        }
+
+
+    </script>
+    <style>
+        div {
+            position: absolute;
+            top: 40%;
+            left: 48%;
+            margin-left: -50px;
+            margin-top: -50px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<div>
+    <label>身份验证已失效,请重新<a onclick="signIn()">&nbsp;登录</a></label>
+</div>
+</body>
+</html>

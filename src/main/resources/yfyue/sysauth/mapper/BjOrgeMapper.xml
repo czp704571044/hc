@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.yfyue.sysauth.mapper.BjOrgeMapper">
+    <resultMap id="BaseResultMap" type="cn.yfyue.sysauth.model.BjOrge">
+        <id column="ORGE_ID" property="orgeId" jdbcType="BIGINT"/>
+        <result column="ORGE_NAME" property="orgeName" jdbcType="VARCHAR"/>
+        <result column="ORGE_LEVEL" property="orgeLevel" jdbcType="INTEGER"/>
+        <result column="SUPERIOR_ORGE_ID" property="superiorOrgeId" jdbcType="BIGINT"/>
+        <result column="USER_ID" property="userId" jdbcType="BIGINT"/>
+        <result column="LOAD_TIME" property="loadTime" jdbcType="TIMESTAMP"/>
+        <result column="ORGE_FULL_NAME" property="orgeFullName" jdbcType="VARCHAR"/>
+        <result column="ORGE_STATE" property="orgeState" jdbcType="INTEGER"/>
+        <result column="ORGE_ADDR" property="orgeAddr" jdbcType="VARCHAR"/>
+        <result column="ORGE_TEL" property="orgeTel" jdbcType="VARCHAR"/>
+        <result column="E_MAIL" property="email" jdbcType="VARCHAR"/>
+        <result column="LINK_MAN" property="linkMan" jdbcType="VARCHAR"/>
+        <result column="ORGE_TYPE" property="orgeType" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap1" type="cn.yfyue.sysauth.model.BjOrgeLayUi">
+        <id column="ORGE_ID" property="id" jdbcType="BIGINT"/>
+        <result column="ORGE_NAME" property="title" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--
+    //取所有部门
+   List<BjOrge> getOrgeList(@Param("orgeState")String orgeState);
+     -->
+    <select id="getOrgeList" resultMap="BaseResultMap">
+        SELECT ORGE_ID,ORGE_NAME,ORGE_LEVEL,SUPERIOR_ORGE_ID,ORGE_FULL_NAME,
+        ORGE_STATE,ORGE_TYPE
+        FROM BJ_ORGE WHERE 1=1
+        <if test="orgeState != null">
+            AND ORGE_STATE = #{orgeState,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+    <select id="getLayUiOrgeList" resultMap="BaseResultMap1">
+      SELECT
+          ORGE_ID,ORGE_NAME
+      FROM BJ_ORGE WHERE ORGE_STATE = 0
+          and SUPERIOR_ORGE_ID = #{pid}
+  </select>
+    <!--
+    //添加
+    int addOrge(BjOrge bjOrge);
+    -->
+    <insert id="addOrge" parameterType="cn.yfyue.sysauth.model.BjOrge">
+    insert into BJ_ORGE (ORGE_NAME, ORGE_LEVEL,ORGE_STATE, 
+      SUPERIOR_ORGE_ID, USER_ID, LOAD_TIME,ORGE_FULL_NAME,
+      ORGE_ADDR,ORGE_TEL,E_MAIL,LINK_MAN,ORGE_TYPE)
+    values (#{orgeName,jdbcType=CHAR}, #{orgeLevel,jdbcType=INTEGER}, #{orgeState,jdbcType=INTEGER}, 
+      #{superiorOrgeId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, NOW(),
+      #{orgeFullName,jdbcType=VARCHAR},#{orgeAddr,jdbcType=VARCHAR},
+      #{orgeTel,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+      #{linkMan,jdbcType=VARCHAR},#{orgeType,jdbcType=VARCHAR}
+      )
+  </insert>
+    <!--
+    //取单个
+    BjOrge getOrgeInfo(String orgeId);
+    -->
+    <select id="getOrgeInfo" resultMap="BaseResultMap">
+   SELECT ORGE_ID,ORGE_NAME,ORGE_LEVEL,SUPERIOR_ORGE_ID,ORGE_FULL_NAME,
+     ORGE_STATE,ORGE_ADDR,ORGE_TEL,E_MAIL,LINK_MAN,ORGE_TYPE
+      FROM BJ_ORGE WHERE ORGE_ID=#{orgeId,jdbcType=BIGINT}
+</select>
+    <!--
+    //更新
+    int upOrge(BjOrge bjOrge);
+    -->
+    <update id="upOrge" parameterType="cn.yfyue.sysauth.model.BjOrge">
+        update BJ_ORGE
+        <set>
+            <if test="orgeType !=null">
+                ORGE_TYPE= #{orgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="orgeAddr !=null">
+                ORGE_ADDR= #{orgeAddr,jdbcType=VARCHAR},
+            </if>
+            <if test="orgeTel !=null">
+                ORGE_TEL= #{orgeTel,jdbcType=VARCHAR},
+            </if>
+            <if test="email !=null">
+                E_MAIL= #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="linkMan !=null">
+                LINK_MAN= #{linkMan,jdbcType=VARCHAR},
+            </if>
+            <if test="orgeFullName !=null">
+                ORGE_FULL_NAME= #{orgeFullName,jdbcType=CHAR},
+            </if>
+            <if test="orgeName != null">
+                ORGE_NAME = #{orgeName,jdbcType=CHAR},
+            </if>
+            <if test="orgeState !=null">
+                ORGE_STATE = #{orgeState,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=BIGINT},
+            </if>
+            LOAD_TIME = NOW(),
+        </set>
+        where ORGE_ID = #{orgeId,jdbcType=BIGINT}
+    </update>
+    <!--
+    //删除
+    int delOrge(String orgeId);
+    -->
+    <delete id="delOrge">
+  DELETE FROM BJ_ORGE WHERE ORGE_ID=#{orgeId,jdbcType=BIGINT}
+</delete>
+    <!--
+    //是否下级
+    int getOrgeIsChild(String orgeId);
+     -->
+    <select id="getOrgeIsChild" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM BJ_ORGE WHERE SUPERIOR_ORGE_ID=#{orgeId,jdbcType=BIGINT}
+ </select>
+    <!--
+    //是否已使用
+    int getOrgeIsUse(String orgeId);
+     -->
+    <select id="getOrgeIsUse" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM BJ_USER WHERE ORGE_ID=#{orgeId,jdbcType=BIGINT}
+ </select>
+</mapper>

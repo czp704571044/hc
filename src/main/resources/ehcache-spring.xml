@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false">
+
+    <diskStore path="java.io.tmpdir/fsp"/>
+
+    <!-- 添加缓存需要实体类序列化-->
+
+    <cache name="getFuncList" maxElementsInMemory="5000" eternal="false"
+           timeToIdleSeconds="600" timeToLiveSeconds="600" overflowToDisk="true"/>
+
+</ehcache>

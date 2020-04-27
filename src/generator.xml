@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--驱动包的绝对路径,必须修改！！！！！！！！！ -->
+    <classPathEntry
+            location="F:/Xuecheng _Online/Xuecheng _Online/ideaRepository/.m2/repository/mysql/mysql-connector-java/5.1.6/mysql-connector-java-5.1.6.jar"/>
+    <!--生成映射的类型，也可以生成ibatis的。具体参看mybatis-generator-->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <commentGenerator><!--具体参看mybatis-generator-->
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://139.9.212.150:53603/HCSH?zeroDateTimeBehavior=convertToNull"
+                        userId="hcsh" password="hc2019sh">
+            <!--数据库连接信息。具体参看mybatis-generator-->
+        </jdbcConnection>
+
+        <javaTypeResolver><!--具体参看mybatis-generator-->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+
+        <!--以下三个标签主要解析targetPackage和targetProject。其它的具体参看mybatis-generator-->
+
+        <!--targetPackage，是生成文件所在的包路径-->
+
+        <!--targetProject，是相对于本xml配置文件的相对路径，是targetPackage包路径的父级目录。-->
+        <!--表的对像-->
+        <javaModelGenerator targetPackage="cn.yfyue.sysauth.model"
+                            targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--生成XML-->
+        <sqlMapGenerator targetPackage="yfyue.sysauth.mapper"
+                         targetProject=".\src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--生成表的操作接口-->
+        <javaClientGenerator targetPackage="cn.yfyue.sysauth.mapper"
+                             type="XMLMAPPER"
+                             targetProject=".\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--与原来mybatis-generator不一样，这个table标签不是必须的。只有对生成的映射有复杂要求时，才需要在这里详细配置-->
+        <!--
+        <table tableName="MYTABLE" schema="MYSCHEMA">
+          <ignoreColumn column="fred"/>
+          <columnOverride column="BEG_DATE" property="startDate"/>
+        </table>
+        -->
+
+        <!--false,即为不生成Ex..的mapper-->
+        <table tableName=""
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"
+        >
+            <!--<domainObjectRenamingRule searchString="^T" replaceString="" />-->
+
+        </table>
+    </context>
+</generatorConfiguration>

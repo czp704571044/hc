@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>地区列表</title>
+    <link rel="stylesheet" href="../../css/layui.css" media="all">
+    <script src="../../myJs/jquery-3.3.1.min.js"></script>
+    <script src="../../myJs/AjaxUtils.js"></script>
+</head>
+<body>
+<div style="margin: 10px">
+    <div class="search_table">
+        地区：
+        <div class="layui-input-inline">
+            <input type="text" id="search_key" class="layui-input">
+        </div>
+        <button type="button" class="layui-btn layui-btn-sm" data-type="reload" id="searchBtn">查询</button>
+        <button class="layui-btn layui-btn-sm" style="float:right; margin-right:5px; display:inline-block"
+                data-type="add_shen">添加省级地区
+        </button>
+    </div>
+</div>
+<div id="areaTree"></div>
+<script src="../../layui.js"></script>
+<script>
+    layui.use('tree', function(){
+        let tree = layui.tree;
+        //渲染
+        sendAjax("/sysAreaAjax/getAreaList", null, function (data) {
+            tree.render({
+                elem: '#areaTree',  //绑定元素
+                data: data.object,
+                id: 'treeId',
+                showCheckbox: true,     //是否显示复选框
+                onlyIconControl: true,
+                /*edit: ['add', 'update', 'del'],
+                operate: function(obj){
+                    debugger;
+                    let type = obj.type; //得到操作类型：add、edit、del
+                    let data = obj.data; //得到当前节点的数据
+                    let elem = obj.elem; //得到当前节点元素
+
+                    //Ajax 操作
+                    let id = data.id; //得到节点索引
+                    if(type === 'add'){ //增加节点
+                        //返回 key 值
+                        return 123;
+                    } else if(type === 'update'){ //修改节点
+                        console.log(elem.find('.layui-tree-txt').html()); //得到修改后的内容
+                    } else if(type === 'del'){ //删除节点
+
+                    };
+                }*/
+            });
+        });
+    });
+</script>
+</body>
+</html>
